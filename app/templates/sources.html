@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}信源管理 - News Aggregator{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>信源管理</h1>
+    <button onclick="document.getElementById('add-form').style.display='block'" class="btn">+ 添加信源</button>
+</div>
+
+<div id="add-form" class="add-form" style="display:none">
+    <form action="/sources" method="post">
+        <input type="text" name="name" placeholder="信源名称" required>
+        <input type="url" name="url" placeholder="RSS 地址" required>
+        <button type="submit" class="btn">添加</button>
+        <button type="button" class="btn btn-secondary" onclick="this.parentElement.parentElement.style.display='none'">取消</button>
+    </form>
+</div>
+
+<table class="sources-table">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>URL</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for src in sources %}
+        <tr>
+            <td>{{ src.name }}</td>
+            <td class="url-cell">{{ src.url }}</td>
+            <td>
+                {% if src.enabled %}
+                <span class="status-ok">✓ 正常</span>
+                {% else %}
+                <span class="status-off">已禁用</span>
+                {% endif %}
+                {% if src.error_count > 0 %}
+                <span class="status-err">连续失败 {{ src.error_count }} 次</span>
+                {% endif %}
+            </td>
+            <td>
+                <form action="/sources/{{ loop.index0 }}/toggle" method="post" style="display:inline">
+                    <button type="submit" class="btn-sm">{{ '禁用' if src.enabled else '启用' }}</button>
+                </form>
+                <form action="/sources/{{ loop.index0 }}/delete" method="post" style="display:inline" onsubmit="return confirm('确认删除？')">
+                    <button type="submit" class="btn-sm btn-danger">删除</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

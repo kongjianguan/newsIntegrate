@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}设置 - News Aggregator{% endblock %}
+{% block content %}
+<h1>设置</h1>
+
+{% if message %}
+<div class="flash">{{ message }}</div>
+{% endif %}
+
+<form action="/settings" method="post" class="settings-form">
+    <fieldset>
+        <legend>LLM 配置</legend>
+        <label>Provider<input name="llm_provider" value="{{ config.llm.provider }}"></label>
+        <label>API Key<input name="llm_api_key" type="password" value="{{ config.llm.api_key }}"></label>
+        <label>Base URL<input name="llm_base_url" value="{{ config.llm.base_url }}"></label>
+        <label>Model<input name="llm_model" value="{{ config.llm.model }}"></label>
+    </fieldset>
+
+    <fieldset>
+        <legend>调度</legend>
+        <label>抓取间隔 (分钟)<input name="schedule_interval" type="number" value="{{ config.schedule.interval_minutes }}"></label>
+    </fieldset>
+
+    <fieldset>
+        <legend>内容偏好</legend>
+        <label>偏好描述<textarea name="pref_description" rows="5">{{ config.preferences.description }}</textarea></label>
+        <label>分类列表（逗号分隔）<input name="pref_categories" value="{{ config.preferences.categories | join(', ') }}"></label>
+    </fieldset>
+
+    <fieldset>
+        <legend>存储</legend>
+        <label>保留天数<input name="retention_days" type="number" value="{{ config.retention_days }}"></label>
+    </fieldset>
+
+    <button type="submit" class="btn">保存设置</button>
+</form>
+{% endblock %}

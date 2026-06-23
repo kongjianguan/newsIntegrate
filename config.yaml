@@ -1,0 +1,90 @@
+# News Aggregator 配置文件
+# 所有信源、LLM、偏好均在此配置
+
+llm:
+  provider: deepseek
+  api_key: "${DEEPSEEK_API_KEY}"
+  base_url: "https://api.deepseek.com/v1"
+  model: deepseek-v4-flash
+  # fallback:  # 可选备用 provider
+  #   provider: doubao
+  #   api_key: "${DOUBAO_API_KEY}"
+  #   base_url: "https://ark.cn-beijing.volces.com/api/v3"
+  #   model: doubao-seed-2.1-pro
+
+sources:
+  - name: "IT之家"
+    url: "https://www.ithome.com/rss"
+    enabled: false
+  - name: "少数派"
+    url: "https://sspai.com/feed"
+    enabled: false
+  - name: "HuggingFace Blog"
+    url: "https://huggingface.co/blog/feed.xml"
+    enabled: false
+  - name: "环境工程技术学报"
+    url: "https://www.hjgcjsxb.org.cn/rss/current.xml"
+    enabled: false  # RSS 条目无日期字段，等待站点修复
+  - name: "ScienceDaily: Environmental Science"
+    url: "https://www.sciencedaily.com/rss/earth_climate/environmental_science.xml"
+    enabled: true
+  - name: "土木与环境工程学报(中英文) - 环境工程"
+    url: "http://qks.cqu.edu.cn/download_upload_file.aspx?file_name=/rss/cqdxxbcn/cn/404.xml"
+    enabled: true
+  - name: "Environmental Technology Reviews"
+    url: "https://www.tandfonline.com/feed/rss/tetr20"
+    enabled: true
+  - name: "Frontiers in Environmental Science"
+    url: "https://www.frontiersin.org/journals/environmental-science/rss"
+    enabled: true
+  - name: "Frontiers in Environmental Engineering"
+    url: "https://www.frontiersin.org/journals/environmental-engineering/rss"
+    enabled: true
+  - name: "Water Resources Research"
+    url: "https://agupubs.onlinelibrary.wiley.com/feed/19447973/most-recent"
+    enabled: true
+  - name: "Water Environment Research"
+    url: "https://onlinelibrary.wiley.com/feed/15547531/most-recent"
+    enabled: true
+  - name: "npj Clean Water"
+    url: "http://feeds.nature.com/npjcleanwater/rss/current"
+    enabled: true
+  - name: "Biochar"
+    url: "https://link.springer.com/search.rss?facet-journal-id=42773&channel-name=Biochar"
+    enabled: true
+
+schedule:
+  interval_minutes: 30
+  startup_fetch: true
+
+preferences:
+  description: |
+    我关注环境工程领域，包括：
+    - 水处理（污水处理技术、饮用水安全、水质监测、膜处理、高级氧化等）
+    - 大气污染控制（VOCs治理、除尘脱硫脱硝、机动车尾气控制等）
+    - 固体废物处理处置（垃圾分类、焚烧、填埋、资源化利用等）
+    - 土壤与地下水修复
+    - 环境监测与分析技术
+    - 环境微生物技术
+    - 环境化学与生态毒理学
+    - 生态环境修复
+    - 碳中和、碳达峰与碳减排技术
+    - 环境政策与管理
+    不要娱乐八卦、股票财经、体育赛事类内容。
+  categories:
+    - 水处理
+    - 大气污染控制
+    - 固体废物处理
+    - 土壤修复
+    - 环境监测
+    - 环境微生物
+    - 环境化学
+    - 生态修复
+    - 碳中和
+    - 环境管理
+
+retention_days: 14
+
+server:
+  host: "0.0.0.0"
+  port: 8765

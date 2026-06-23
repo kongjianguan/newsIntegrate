@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}News Aggregator{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>信息流</h1>
+    <form action="/api/refresh" method="post">
+        <button type="submit" class="btn">手动刷新</button>
+    </form>
+</div>
+
+<div class="filter-bar">
+    <a href="/" class="filter-tag {% if not current_category %}active{% endif %}">全部</a>
+    {% for cat in categories %}
+    <a href="/?category={{ cat }}&source={{ current_source or '' }}&q={{ query or '' }}"
+       class="filter-tag {% if current_category == cat %}active{% endif %}">{{ cat }}</a>
+    {% endfor %}
+</div>
+
+<div class="filter-bar">
+    <select name="source" onchange="location.href='/?source='+this.value+'&category={{ current_category or '' }}&q={{ query or '' }}'">
+        <option value="">全部信源</option>
+        {% for src in sources %}
+        <option value="{{ src.name }}" {% if current_source == src.name %}selected{% endif %}>{{ src.name }}</option>
+        {% endfor %}
+    </select>
+    <form action="/" method="get" class="search-form">
+        {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
+        {% if current_source %}<input type="hidden" name="source" value="{{ current_source }}">{% endif %}
+        <input type="text" name="q" placeholder="搜索..." value="{{ query or '' }}">
+        <button type="submit" class="btn">搜索</button>
+    </form>
+</div>
+
+<div class="items-list">
+    {% for item in items %}
+    <article class="item-card">
+        <div class="item-meta">
+            <span class="item-source">{{ item.source_name }}</span>
+            {% if item.score %}
+            <span class="item-score">{{ item.score }} 分</span>
+            {% endif %}
+            <span class="item-time">{{ item.published_at or item.fetched_at }}</span>
+        </div>
+        <h2 class="item-title">
+            <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title_cn or item.title }}</a>
+        </h2>
+        {% if item.summary %}
+        <p class="item-summary">{{ item.summary }}</p>
+        {% endif %}
+        <div class="item-tags">
+            {% if item.category %}
+            <span class="tag">{{ item.category }}</span>
+            {% endif %}
+            <a href="{{ item.url }}" target="_blank" class="tag tag-link">原文 →</a>
+        </div>
+    </article>
+    {% else %}
+    <p class="empty">暂无内容。请添加 RSS 信源并等待首次抓取。</p>
+    {% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="/?page={{ page - 1 }}&category={{ current_category or '' }}&source={{ current_source or '' }}&q={{ query or '' }}">← 上一页</a>
+    {% endif %}
+    <span>{{ page }} / {{ total_pages }}</span>
+    {% if page < total_pages %}
+    <a href="/?page={{ page + 1 }}&category={{ current_category or '' }}&source={{ current_source or '' }}&q={{ query or '' }}">下一页 →</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
