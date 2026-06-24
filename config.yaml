@@ -54,7 +54,9 @@ sources:
     enabled: true
 
 schedule:
+  # 抓取间隔
   interval_minutes: 30
+  # 启动时抓取开关
   startup_fetch: true
 
 preferences:
@@ -83,6 +85,7 @@ preferences:
     - 碳中和
     - 环境管理
 
+# 过期时间
 retention_days: 14
 
 server:
